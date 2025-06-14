@@ -1,0 +1,18 @@
+package com.hrprogram.hrprogram.model.request;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class CvRequest {
+    private String text;
+    private String filePath;
+    private String originalFileName;
+    private List<String> keywords;
+//    private CvDto cvDto;
+}
