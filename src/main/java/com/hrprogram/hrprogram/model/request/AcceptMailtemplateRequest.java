@@ -2,7 +2,6 @@ package com.hrprogram.hrprogram.model.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -11,7 +10,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RejectMailTemplateRequest{
+public class AcceptMailtemplateRequest {
 
     private LocalDateTime hrId;
     private List<String> emails;

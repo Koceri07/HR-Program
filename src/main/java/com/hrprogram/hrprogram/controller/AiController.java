@@ -2,8 +2,6 @@ package com.hrprogram.hrprogram.controller;
 
 import com.hrprogram.hrprogram.model.request.CvRequest;
 import com.hrprogram.hrprogram.model.request.PdfRequest;
-import com.hrprogram.hrprogram.repository.CvRepository;
-import com.hrprogram.hrprogram.response.CvResponse;
 import com.hrprogram.hrprogram.service.AiService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +39,7 @@ public class AiController {
     }
 
     @PostMapping("gpt/all")
-    public List<CvResponse> gptAnaliseWithDb(@RequestBody List<String> keywords){
-        return aiService.gptAnalisewithDb(keywords);
+    public void gptAnaliseWithDb(@RequestBody List<String> keywords){
+        aiService.gptAnalisewithDb(keywords);
     }
 }

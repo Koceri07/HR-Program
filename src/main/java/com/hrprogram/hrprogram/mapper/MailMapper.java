@@ -1,6 +1,7 @@
 package com.hrprogram.hrprogram.mapper;
 
 import com.hrprogram.hrprogram.entity.MailEntity;
+import com.hrprogram.hrprogram.entity.RejectMailTemplateEntity;
 import com.hrprogram.hrprogram.model.request.MailRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -13,4 +14,6 @@ public interface MailMapper {
     MailEntity toEntity(MailRequest mailRequest);
 
     MailRequest toRequest(MailEntity mailEntity);
+
+    MailRequest rejectedMailToRequest(RejectMailTemplateEntity rejectMailTemplateEntity);
 }

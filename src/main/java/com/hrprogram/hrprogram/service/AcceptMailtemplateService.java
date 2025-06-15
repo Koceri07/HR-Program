@@ -1,33 +1,30 @@
 package com.hrprogram.hrprogram.service;
 
+import com.hrprogram.hrprogram.entity.AcceptMailtemplateEntity;
 import com.hrprogram.hrprogram.entity.MailEntity;
-import com.hrprogram.hrprogram.entity.RejectMailTemplateEntity;
-import com.hrprogram.hrprogram.mapper.RejectedMailMapper;
+import com.hrprogram.hrprogram.mapper.AcceptMailtemplateMapper;
 import com.hrprogram.hrprogram.mapper.UserMapper;
+import com.hrprogram.hrprogram.model.request.AcceptMailtemplateRequest;
 import com.hrprogram.hrprogram.model.request.CvRequest;
-import com.hrprogram.hrprogram.model.request.RejectMailTemplateRequest;
-import com.hrprogram.hrprogram.repository.RejectMailTemplateRepository;
+import com.hrprogram.hrprogram.repository.AcceptMailtemplateRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class RejectMailTemplateService {
-    private final RejectMailTemplateRepository repository;
-    private final JavaMailSender javaMailSender;
+public class AcceptMailtemplateService {
+    private final AcceptMailtemplateRepository repository;
     private final UserService userService;
     private final MailService mailService;
 
     public void saveRejectMailTemplate(Long hrId, String content, CvRequest cvRequest){
         log.info("Action.saveRejectMailTemplate.start for hr id {}", hrId);
-        RejectMailTemplateEntity rejectMailTemplate = new RejectMailTemplateEntity();
+        AcceptMailtemplateEntity acceptMailtemplate = new AcceptMailtemplateEntity();
         var user = userService.getUserResponseById(hrId);
 
         MailEntity mailEntity = new MailEntity();
@@ -35,18 +32,19 @@ public class RejectMailTemplateService {
         mailEntity.setMailFrom(user.getEmail());
         mailEntity.setText(content);
 
-        rejectMailTemplate.setHrId(hrId);
-        rejectMailTemplate.setContent(content);
-        rejectMailTemplate.setCreateAt(LocalDateTime.now());
-        rejectMailTemplate.setMailEntity(mailEntity);
-        repository.save(rejectMailTemplate);
+        acceptMailtemplate.setHrId(hrId);
+        acceptMailtemplate.setContent(content);
+        acceptMailtemplate.setCreateAt(LocalDateTime.now());
+        acceptMailtemplate.setMailEntity(mailEntity);
+        repository.save(acceptMailtemplate);
 
         log.info("Action.saveRejectMailTemplate.end for hr id {}", hrId);
     }
 
-    public RejectMailTemplateRequest getRejectMailTemplateByHrId(Long hrId){
+
+    public AcceptMailtemplateRequest getRejectMailTemplateByHrId(Long hrId){
         log.info("Action.getRejectMailTemplateByHrId.start for hr id {}", hrId);
-        var mailEntity = repository.getRejectMailTemplateEntityByHrId(hrId);
+        var mailEntity = repository.getAcceptMailtemplateEntityByHrId(hrId);
 
         if (mailEntity.getContent().isEmpty()){
             log.info("Action.getRejectMailTemplateByHrId.end for id {}", hrId);
@@ -54,7 +52,7 @@ public class RejectMailTemplateService {
         }
 
 
-        var mailRequset = RejectedMailMapper.INSTANCE.entityToRequest(mailEntity);
+        var mailRequset = AcceptMailtemplateMapper.INSTANCE.entityToRequest(mailEntity);
         log.info("Action.getRejectMailTemplateByHrId.end for id {}", hrId);
         return mailRequset;
 
@@ -69,5 +67,6 @@ public class RejectMailTemplateService {
         mailService.sendMail(mailRequest, userRequest);
         log.info("Action.sendRejectMail.end");
     }
+
 
 }

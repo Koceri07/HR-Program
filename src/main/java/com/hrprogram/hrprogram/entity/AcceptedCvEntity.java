@@ -12,12 +12,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "cv")
+@Table(name = "accepted-cvs")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CvEntity {
+public class AcceptedCvEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,19 +27,21 @@ public class CvEntity {
     private String education;
     private String email;
     private String phone;
+
     private String totalPredictedScore;
     private String experiencePredictedScore;
     private String hardSkillsPredictedScore;
     private String softSkillsPredictedScore;
-//    private String languagePredictedScore;
+
     @Enumerated(value = EnumType.STRING)
     private CvStatus cvStatus;
     private boolean isActive;
-    
+
 
     @CreationTimestamp
     private LocalDateTime createTime;
 
     @UpdateTimestamp
     private LocalDateTime updateTime;
+
 }

@@ -3,6 +3,7 @@ package com.hrprogram.hrprogram.controller;
 import com.hrprogram.hrprogram.model.dto.CvDto;
 import com.hrprogram.hrprogram.model.request.CvRequest;
 import com.hrprogram.hrprogram.response.ApiResponse;
+import com.hrprogram.hrprogram.response.CvResponse;
 import com.hrprogram.hrprogram.service.CvService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.io.IOException;
+import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:5500")
 @RestController
@@ -27,12 +29,17 @@ public class CvController {
 
     @PostMapping("/add")
     public void add(@RequestBody CvRequest cvRequest){
-        cvService.addCv(cvRequest);
+        cvService.addCvWithAi(cvRequest);
     }
 
     @PostMapping
     public void create(@RequestBody CvDto cvDto){
         cvService.createCv(cvDto);
+    }
+
+    @PostMapping()
+    public void AutoMail(@RequestBody List<CvResponse> cvResponses){
+        cvService.autoMail(cvResponses);
     }
 
     @GetMapping("/filter/total")
@@ -71,8 +78,8 @@ public class CvController {
     }
 
     @PutMapping("{id}")
-    public void softDelet(){
-
+    public void softDelete(@PathVariable Long id){
+        cvService.softDeleteCvById(id);
     }
 
     @Bean

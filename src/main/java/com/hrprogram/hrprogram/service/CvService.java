@@ -2,6 +2,7 @@ package com.hrprogram.hrprogram.service;
 
 import com.hrprogram.hrprogram.mapper.CvMapper;
 import com.hrprogram.hrprogram.model.dto.CvDto;
+import com.hrprogram.hrprogram.model.enums.CvStatus;
 import com.hrprogram.hrprogram.model.request.CvRequest;
 import com.hrprogram.hrprogram.response.ApiResponse;
 import com.hrprogram.hrprogram.repository.CvRepository;
@@ -26,7 +27,8 @@ import java.util.List;
 public class CvService {
     private final CvRepository cvRepository;
     private final CvScrollingService cvScrollingService;
-
+    private final RejectMailTemplateService rejectMailTemplateService;
+    private final AcceptMailtemplateService acceptMailtemplateServicel;
 
     private AiService aiService;
 
@@ -46,14 +48,15 @@ public class CvService {
         log.info("Action.createCvPdf.end for {}", file.getName());
     }
 
-    public void addCv(CvRequest cvRequest){
-        log.info("Action.addCv.start for file path {}", cvRequest.getFilePath());
+    public void addCvWithAi(CvRequest cvRequest){
+        log.info("Action.addCvWithAi.start for file path {}", cvRequest.getFilePath());
         var jsonResponse = aiService.gptAnalise(cvRequest);
         var cvResponse = cvScrollingService.parseJsonRespone(jsonResponse);
         var cvEntity = CvMapper.INSTANCE.responseToEntity(cvResponse);
         cvEntity.setActive(true);
+        cvEntity.setCvStatus(CvStatus.PENDING);
         cvRepository.save(cvEntity);
-        log.info("Action.addCv.end for file path {}", cvRequest.getFilePath());
+        log.info("Action.addCvWithAi.end for file path {}", cvRequest.getFilePath());
     }
 
 
@@ -113,9 +116,26 @@ public class CvService {
         return apiResponse;
     }
 
-    public void rejectCv(List<CvResponse> cvResponses){
+
+
+    public List<CvResponse> getAcceptedCvs(){
+        log.info("Action.getAcceptedCvs.start");
+        var cvs = cvRepository.findAll().stream()
+                .map(CvMapper.INSTANCE::entityToResponse)
+                .filter(cvResponse -> cvResponse.getCvStatus() == CvStatus.ACCEPTED)
+                .toList();
+        log.info("Action.getAcceptedCvs.end");
+        return cvs;
+    }
+
+    public void rejectCv(List<CvResponse> cvResponseList){
         log.info("Action.rejectCv.start");
-        cvResponses.stream();
+        var cvs = cvResponseList.stream()
+                .filter(cvResponses -> ((CvResponse) cvResponses).getCvStatus() == CvStatus.ACCEPTED)
+                .peek(cvResponse -> cvResponse.setActive(false))
+                .toList();
+        log.info("Action.rejectCv.end");
+
     }
 
 //    public ApiResponse getAllCvs(){
@@ -166,6 +186,17 @@ public class CvService {
         return apiResponse;
     }
 
+
+    public List<CvResponse> getAllCvResponses(){
+        log.info("Action.getAllCvs.start");
+        var cvs = cvRepository.findAll()
+                .stream()
+                .map(CvMapper.INSTANCE::entityToResponse)
+                .toList();
+        log.info("Action.getAllCvs.end");
+        return cvs;
+    }
+
     public void softDeleteCvById(Long id){
         log.info("Action.softDeleteCvById.start for id {}", id);
         var cvDto = getCvDtoById(id);
@@ -178,4 +209,21 @@ public class CvService {
         cvRepository.deleteById(id);
         log.info("Action.deleteById.end for id {}", id);
     }
+
+    public void autoMail(List<CvResponse> acceptedCvs){
+        log.info("Action.autoMail.start");
+        var allCvs = getAllCvResponses();
+        for (CvResponse cvResponse : allCvs){
+            var cvRequest = CvMapper.INSTANCE.toRequest(cvResponse);
+            var result = acceptedCvs.contains(cvResponse);
+            if (result){
+                acceptMailtemplateServicel.sendRejectMail(cvResponse.getId(), cvRequest);
+            }
+            else{
+                rejectMailTemplateService.sendRejectMail(cvResponse.getId(), cvRequest);
+            }
+        }
+    }
+
+
 }

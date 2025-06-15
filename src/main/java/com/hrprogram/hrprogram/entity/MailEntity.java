@@ -30,6 +30,9 @@ public class MailEntity {
     private String subject;
     private String text;
 
+    @OneToOne
+    private RejectMailTemplateEntity rejectMailTemplateEntity;
+
     @CreationTimestamp
     private LocalDateTime sentAt;
 }

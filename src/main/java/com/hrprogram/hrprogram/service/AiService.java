@@ -6,6 +6,7 @@ import com.hrprogram.hrprogram.model.request.AiRequest;
 import com.hrprogram.hrprogram.model.request.ApplicantCvRequest;
 import com.hrprogram.hrprogram.model.request.CvRequest;
 import com.hrprogram.hrprogram.model.request.TrainRequest;
+import com.hrprogram.hrprogram.repository.CvRepository;
 import com.hrprogram.hrprogram.response.CvResponse;
 import com.hrprogram.hrprogram.util.PdfTextExtractor;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class AiService {
     private final PdfTextExtractor pdfTextExtractor;
     private final ApplicantCvService applicantCvService;
     private final CvScrollingService cvScrollingService;
+    private final CvRepository cvRepository;
 
     public String pdfAnalise(String path){
         String text = pdfTextExtractor.extarcText(path);
@@ -54,14 +56,9 @@ public class AiService {
 
 
 
-
-
-    public List<CvResponse> gptAnalisewithDb(List<String> keywords){
+    public void gptAnalisewithDb(List<String> keywords){
+        log.info("Action.gptAnalisewithDb.start");
         var cvs = applicantCvService.getAllCvs();
-//        cvs.stream()
-//                .map(ApplicantCvMapper.INSTANCE::aplicantToRequest)
-//                .map(this::gptAnaliseWithKeywords())
-
         List<CvResponse> cvResponses = new ArrayList<>();
 
         for (ApplicantCvRequest request : cvs){
@@ -71,7 +68,12 @@ public class AiService {
 
             cvResponses.add(cvResponse);
         }
-        return cvResponses;
+
+        for (CvResponse response : cvResponses){
+            cvRepository.updateScoresById(response.getTotalPredictedScore(), response.getExperiencePredictedScore(), response.getHardSkillsPredictedScore(),response.getSoftSkillsPredictedScore(),response.getId());
+            cvRepository.updateContactInfoById(response.getEmail(), response.getPhone(), response.getId());
+        }
+        log.info("Action.gptAnalisewithDb.end");
     }
 
 

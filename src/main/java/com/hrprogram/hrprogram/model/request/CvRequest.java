@@ -14,5 +14,6 @@ public class CvRequest {
     private String filePath;
     private String originalFileName;
     private List<String> keywords;
+    private String email;
 //    private CvDto cvDto;
 }

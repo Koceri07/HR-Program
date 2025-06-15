@@ -12,4 +12,6 @@ public interface RejectMailTemplateRepository extends CrudRepository<RejectMailT
     List<RejectMailTemplateEntity> findAll();
 
     List<RejectMailTemplateEntity> findAllByHrId(Long hrId);
+
+    RejectMailTemplateEntity getRejectMailTemplateEntityByHrId(Long hrId);
 }

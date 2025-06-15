@@ -3,8 +3,10 @@ package com.hrprogram.hrprogram.service;
 import com.hrprogram.hrprogram.exception.NotFoundException;
 import com.hrprogram.hrprogram.mapper.UserMapper;
 import com.hrprogram.hrprogram.model.dto.UserDto;
+import com.hrprogram.hrprogram.model.request.UserRequest;
 import com.hrprogram.hrprogram.repository.UserRepository;
 import com.hrprogram.hrprogram.response.ApiResponse;
+import com.hrprogram.hrprogram.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,13 +15,14 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 public class UserService {
-    private UserRepository userRepository;
+    private MailService mailService;
+    private final UserRepository userRepository;
 
-    public void createUser(UserDto userDto){
-      log.info("Action.createUser.start for id {}", userDto.getId());
-      var entity = UserMapper.INSTANCE.toEntity(userDto);
+    public void createUser(UserRequest userRequest){
+      log.info("Action.createUser.start for id {}", userRequest.getId());
+      var entity = UserMapper.INSTANCE.requestToEntity(userRequest);
       userRepository.save(entity);
-      log.info("Action.createUser.end for id {}", userDto.getId());
+      log.info("Action.createUser.end for id {}", userRequest.getId());
     }
 
     public ApiResponse getUserById(Long id){
@@ -32,12 +35,12 @@ public class UserService {
         return apiResponse;
     }
 
-    public UserDto getUserDtoById(Long id){
-        log.info("Action.getUserDtoById.start for id {}", id);
+    public UserResponse getUserResponseById(Long id){
+        log.info("Action.getUserResponseById.start for id {}", id);
         var user = userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Id Not Found"));
-        var userDto = UserMapper.INSTANCE.toDto(user);
-        log.info("Action.getUserDtoById.end for id {}", id);
+        var userDto = UserMapper.INSTANCE.entityToResponse(user);
+        log.info("Action.getUserResponseById.end for id {}", id);
         return userDto;
     }
 
@@ -59,8 +62,9 @@ public class UserService {
 
     public void useSoftDeleteById(Long id){
         log.info("Acton.useSoftDeleteById.start for id {}", id);
-        var user = getUserDtoById(id);
-        user.setActive(false);
+        var user = getUserResponseById(id);
+        var userEntity = UserMapper.INSTANCE.responseToEntity(user);
+        userEntity.setActive(false);
         log.info("Acton.useSoftDeleteById.end for id {}", id);
     }
 

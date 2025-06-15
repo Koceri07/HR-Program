@@ -16,4 +16,5 @@ public class MailRequest {
     private List<String> mailTo;
     private String subject;
     private String text;
+    private MailRequest mailRequest;
 }

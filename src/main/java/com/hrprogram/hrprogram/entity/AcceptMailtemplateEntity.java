@@ -10,13 +10,12 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "reject_mails")
+@Table(name = "accepted_mails")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RejectMailTemplateEntity {
-
+public class AcceptMailtemplateEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

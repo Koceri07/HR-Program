@@ -1,6 +1,7 @@
 package com.hrprogram.hrprogram.controller;
 
 import com.hrprogram.hrprogram.model.dto.UserDto;
+import com.hrprogram.hrprogram.model.request.UserRequest;
 import com.hrprogram.hrprogram.response.ApiResponse;
 import com.hrprogram.hrprogram.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +14,8 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public void create(@RequestBody UserDto userDto){
-        userService.createUser(userDto);
+    public void create(@RequestBody UserRequest userRequest){
+        userService.createUser(userRequest);
     }
 
     @GetMapping("/{id}")

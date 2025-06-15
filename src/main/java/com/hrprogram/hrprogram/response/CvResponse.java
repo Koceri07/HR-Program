@@ -1,5 +1,6 @@
 package com.hrprogram.hrprogram.response;
 
+import com.hrprogram.hrprogram.model.enums.CvStatus;
 import com.hrprogram.hrprogram.model.request.PdfRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,6 +23,7 @@ public class CvResponse {
     private String experiencePredictedScore;
     private String hardSkillsPredictedScore;
     private String softSkillsPredictedScore;
+    private CvStatus cvStatus;
 
     private boolean isActive;
     private LocalDateTime createAt;
