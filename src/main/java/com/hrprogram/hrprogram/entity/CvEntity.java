@@ -23,7 +23,9 @@ public class CvEntity {
     private Long id;
 
     private String originalFileName;
-    private String education;
+    private String filePath;
+    private String position;
+    private String summary;
     private String email;
     private String phone;
     private String totalPredictedScore;

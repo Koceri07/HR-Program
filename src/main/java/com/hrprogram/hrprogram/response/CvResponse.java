@@ -17,6 +17,8 @@ public class CvResponse {
     private String text;
     private String email;
     private String phone;
+    private String position;
+    private String summary;
 
     private String originalFileName;
     private String totalPredictedScore;

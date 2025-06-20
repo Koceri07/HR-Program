@@ -15,5 +15,5 @@ public interface MailMapper {
 
     MailRequest toRequest(MailEntity mailEntity);
 
-    MailRequest rejectedMailToRequest(RejectMailTemplateEntity rejectMailTemplateEntity);
+//    MailRequest rejectedMailToRequest(RejectMailTemplateEntity rejectMailTemplateEntity);
 }

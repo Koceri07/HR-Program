@@ -1,5 +1,6 @@
 package com.hrprogram.hrprogram.entity;
 
+import com.hrprogram.hrprogram.model.enums.MailType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,6 +30,9 @@ public class MailEntity {
 
     private String subject;
     private String text;
+
+    @Enumerated(value = EnumType.STRING)
+    private MailType mailType;
 
     @OneToOne
     private RejectMailTemplateEntity rejectMailTemplateEntity;

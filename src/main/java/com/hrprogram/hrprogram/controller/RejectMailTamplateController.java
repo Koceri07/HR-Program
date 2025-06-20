@@ -1,26 +1,26 @@
 package com.hrprogram.hrprogram.controller;
 
+import com.hrprogram.hrprogram.model.request.CvRequest;
+import com.hrprogram.hrprogram.model.request.RejectMailTemplateRequest;
+import com.hrprogram.hrprogram.response.CvResponse;
 import com.hrprogram.hrprogram.service.RejectMailTemplateService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping
+@RequestMapping("/v1/reject-mail")
 @RequiredArgsConstructor
 public class RejectMailTamplateController {
 
     private final RejectMailTemplateService rejectMailTemplateService;
 
     @PostMapping
-    public void save(Long hrId, String content){
+    public void save(@RequestBody Long hrId, String content, CvRequest cvRequest){
         rejectMailTemplateService.saveRejectMailTemplate(hrId,content);
     }
 
     @GetMapping
-    public String getByHrId(Long hrId){
+    public RejectMailTemplateRequest getByHrId(Long hrId){
         return rejectMailTemplateService.getRejectMailTemplateByHrId(hrId);
     }
 

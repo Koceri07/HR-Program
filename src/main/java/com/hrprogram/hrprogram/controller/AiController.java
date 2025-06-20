@@ -39,7 +39,7 @@ public class AiController {
     }
 
     @PostMapping("gpt/all")
-    public void gptAnaliseWithDb(@RequestBody List<String> keywords){
-        aiService.gptAnalisewithDb(keywords);
+    public void gptAnaliseWithDb(@RequestBody CvRequest cvRequest){
+        aiService.gptAnalisewithDb(cvRequest);
     }
 }

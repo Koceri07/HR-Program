@@ -27,17 +27,17 @@ public class CvController {
         cvService.createCvPdf(file);
     }
 
-    @PostMapping("/add")
+    @PostMapping("/add-ai")
     public void add(@RequestBody CvRequest cvRequest){
         cvService.addCvWithAi(cvRequest);
     }
 
     @PostMapping
-    public void create(@RequestBody CvDto cvDto){
-        cvService.createCv(cvDto);
+    public void create(@RequestBody CvRequest cvRequest){
+        cvService.createCv(cvRequest);
     }
 
-    @PostMapping()
+    @PostMapping("/auto-mail")
     public void AutoMail(@RequestBody List<CvResponse> cvResponses){
         cvService.autoMail(cvResponses);
     }
@@ -62,12 +62,17 @@ public class CvController {
         return cvService.filterCvsBySoftSkillsScore();
     }
 
-    @GetMapping("{id}")
+    @GetMapping("get/{id}")
     public ApiResponse getById(@PathVariable Long id){
         return cvService.getCvById(id);
     }
 
-    @GetMapping
+    @GetMapping("/get/position")
+    public List<CvResponse> getByPosition(@RequestBody String position){
+        return cvService.getByPosition(position);
+    }
+
+    @GetMapping("/get-all")
     public ApiResponse getAll(){
         return cvService.getAllCvs();
     }
@@ -80,6 +85,10 @@ public class CvController {
     @PutMapping("{id}")
     public void softDelete(@PathVariable Long id){
         cvService.softDeleteCvById(id);
+    }
+    @PutMapping("/accept-cvs")
+    public void acceptCvs(List<CvResponse> acceptedCvs){
+        cvService.acceptCvs(acceptedCvs);
     }
 
     @Bean

@@ -24,6 +24,9 @@ public class RejectMailTemplateEntity {
     private Long hrId;
     private String content;
 
+    private String mailFrom;
+    private String mailTo;
+
     @OneToOne
     private MailEntity mailEntity;
 

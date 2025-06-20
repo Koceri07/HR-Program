@@ -10,6 +10,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CvRequest {
+    private Long id;
+    private String position;
     private String text;
     private String filePath;
     private String originalFileName;

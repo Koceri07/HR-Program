@@ -12,7 +12,7 @@ public interface CvMapper {
     CvMapper INSTANCE = Mappers.getMapper(CvMapper.class);
 
 //    @Mapping(target = "id",ignore = true)
-    CvEntity toEntity(CvDto cvDto);
+    CvEntity toEntity(CvRequest cvRequest);
 
 //    @Mapping(target = "id", ignore = true)
     CvDto toDto(CvEntity entity);
@@ -21,7 +21,9 @@ public interface CvMapper {
 
     CvResponse entityToResponse(CvEntity cvEntity);
 
+    CvRequest entityToRequest(CvEntity cvEntity);
+
     CvRequest toRequest(CvResponse cvResponse);
 
-    CvResponse toResponse(CvRequest cvRequest);
+    CvResponse requestToRespone(CvRequest cvRequest);
 }

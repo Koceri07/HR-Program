@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 public class AcceptMailtemplateRequest {
 
-    private LocalDateTime hrId;
+    private Long hrId;
     private List<String> emails;
     private String content;
 

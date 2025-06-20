@@ -58,7 +58,7 @@ public class AcceptMailtemplateService {
 
     }
 
-    public void sendRejectMail(Long hrId, CvRequest cvRequest){
+    public void sendAcceptMail(Long hrId, CvRequest cvRequest){
         log.info("Action.sendRejectMail.start");
         var mailTemplate = getRejectMailTemplateByHrId(hrId);
         var mailRequest = mailTemplate.getMailRequest();

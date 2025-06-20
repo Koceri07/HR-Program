@@ -9,7 +9,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@FeignClient(name = "aiClient", url = "http://localhost:5000")
+@FeignClient(name = "aiClient", url = "http://localhost:5001")
 public interface AIClientFeign {
 
     @PostMapping(value = "/analise_cv", consumes = "application/json")

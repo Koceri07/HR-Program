@@ -1,7 +1,10 @@
 package com.hrprogram.hrprogram.service;
 
+import com.hrprogram.hrprogram.entity.CvEntity;
 import com.hrprogram.hrprogram.mapper.ApplicantCvMapper;
+import com.hrprogram.hrprogram.model.enums.CvStatus;
 import com.hrprogram.hrprogram.model.request.ApplicantCvRequest;
+import com.hrprogram.hrprogram.model.request.CvRequest;
 import com.hrprogram.hrprogram.repository.ApplicantCvRepository;
 import com.hrprogram.hrprogram.repository.CvRepository;
 import jakarta.mail.*;
@@ -135,10 +138,16 @@ public class ApplicantCvService {
                             request.setFilePath(saveDir + File.separator + uniqueFileName);
                             request.setOriginalFileName(fileName);
 
+                            CvEntity cvEntity = new CvEntity();
+                            cvEntity.setCvStatus(CvStatus.PENDING);
+                            cvEntity.setActive(true);
+                            cvEntity.setOriginalFileName(fileName);
+                            cvEntity.setFilePath(saveDir + File.separator + uniqueFileName);
+
                             var entity = ApplicantCvMapper.INSTANCE.toEntity(request);
                             entity.setFileHash(fileHash);
-//                            applicantCvRepository.save(entity);
-                            var cvEntity = ApplicantCvMapper.INSTANCE.applicantRequestToCvEntity(request);
+                            applicantCvRepository.save(entity);
+//                            var cvEntity = ApplicantCvMapper.INSTANCE.applicantRequestToCvEntity(request);
                             cvRepository.save(cvEntity);
 
 

@@ -40,9 +40,9 @@ public class CvService {
     public void createCvPdf(MultipartFile file) throws IOException {
         log.info("Action.createCvPdf.start for {}", file.getName());
         Path path = Paths.get("uploads", file.getOriginalFilename());
-        CvDto cvDto = new CvDto();
-        cvDto.setCvName(file.getName());
-        createCv(cvDto);
+        CvRequest cvRequest = new CvRequest();
+        cvRequest.setOriginalFileName(file.getName());
+        createCv(cvRequest);
         Files.createDirectories(path.getParent());
         Files.write(path, file.getBytes());
         log.info("Action.createCvPdf.end for {}", file.getName());
@@ -138,22 +138,12 @@ public class CvService {
 
     }
 
-//    public ApiResponse getAllCvs(){
-//        log.info("Action.getAllCvs.start");
-//        var cvs = cvRepository.findAll().stream()
-//                .map(CvMapper.INSTANCE::entityToResponse)
-//                .toList();
-//        ApiResponse apiResponse = new ApiResponse(cvs);
-//        log.info("Action.getAllCvs.end");
-//        return apiResponse;
-//    }
-
-    public void createCv(CvDto cvDto){
-        log.info("Action.createCv.start for id {}", cvDto.getId());
-        var cvEntity = CvMapper.INSTANCE.toEntity(cvDto);
+    public void createCv(CvRequest cvRequest){
+        log.info("Action.createCv.start for id {}", cvRequest.getId());
+        var cvEntity = CvMapper.INSTANCE.toEntity(cvRequest);
         cvEntity.setActive(true);
         cvRepository.save(cvEntity);
-        log.info("Action.create.start for id {}", cvDto.getId());
+        log.info("Action.create.start for id {}", cvRequest.getId());
     }
 
     public ApiResponse getCvById(Long id){
@@ -173,6 +163,15 @@ public class CvService {
         var cvDto = CvMapper.INSTANCE.toDto(entity);
         log.info("Action.getCvDtoById.end for id {}", id);
         return cvDto;
+    }
+
+    public CvResponse getCvResponseById(Long id){
+        log.info("Action.getCvResponseById.start for id {}", id);
+        var entity = cvRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Id Not Found"));
+        var cvResponse = CvMapper.INSTANCE.entityToResponse(entity);
+        log.info("Action.getCvResponseById.end for id {}", id);
+        return cvResponse;
     }
 
     public ApiResponse getAllCvs(){
@@ -197,6 +196,26 @@ public class CvService {
         return cvs;
     }
 
+    public List<CvRequest> getAllCvRequest(){
+        log.info("Action.getAllCvs.start");
+        var cvs = cvRepository.findAll()
+                .stream()
+                .map(CvMapper.INSTANCE::entityToRequest)
+                .toList();
+        log.info("Action.getAllCvs.end");
+        return cvs;
+    }
+
+    public List<CvResponse> getByPosition(String position){
+        log.info("Action.getByPosition.start for {}", position);
+        var cvs = getAllCvResponses();
+        List<CvResponse> list = cvs.stream()
+                .filter(cvResponse -> cvResponse.getCvStatus().name().equals(position))
+                .toList();
+        log.info("Action.getByPosition.end for {}", position);
+        return list;
+    }
+
     public void softDeleteCvById(Long id){
         log.info("Action.softDeleteCvById.start for id {}", id);
         var cvDto = getCvDtoById(id);
@@ -217,12 +236,28 @@ public class CvService {
             var cvRequest = CvMapper.INSTANCE.toRequest(cvResponse);
             var result = acceptedCvs.contains(cvResponse);
             if (result){
-                acceptMailtemplateServicel.sendRejectMail(cvResponse.getId(), cvRequest);
+                acceptMailtemplateServicel.sendAcceptMail(cvResponse.getId(), cvRequest);
+                cvResponse.setCvStatus(CvStatus.ACCEPTED);
             }
             else{
-                rejectMailTemplateService.sendRejectMail(cvResponse.getId(), cvRequest);
+                rejectMailTemplateService.sendRejectMail(cvResponse.getId(), cvResponse.getId());
+                cvResponse.setCvStatus(CvStatus.REJECTED);
             }
         }
+    }
+
+    public void acceptCvs(List<CvResponse> acceptedCvs){
+        log.info("Action.AcceptCvs.start");
+        var allCvs = getAllCvResponses();
+
+        for (CvResponse cvResponse : allCvs){
+            var cvRequest = CvMapper.INSTANCE.toRequest(cvResponse);
+            var result = acceptedCvs.contains(cvResponse);
+            if (!result){
+                cvResponse.setActive(false);
+            }
+        }
+        log.info("Action.AcceptCvs.end");
     }
 
 

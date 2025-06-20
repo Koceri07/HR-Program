@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class RejectMailTemplateRequest{
 
-    private LocalDateTime hrId;
+    private Long hrId;
     private List<String> emails;
     private String content;
 
