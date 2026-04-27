@@ -15,6 +15,6 @@ public interface RejectMailTemplateRepository extends CrudRepository<RejectMailT
 
     List<RejectMailTemplateEntity> findAllByHrId(Long hrId);
 
-    @Query(value = "SELECT * FROM reject_mails WHERE id = :id;", nativeQuery = true)
+    @Query(value = "SELECT * FROM reject_mails WHERE hr_id = :id;", nativeQuery = true)
     RejectMailTemplateEntity getRejectMailTemplateEntityByHrId(@Param("id") Long hrId);
 }

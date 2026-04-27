@@ -17,6 +17,5 @@ public class RejectMailTemplateRequest{
     private List<String> emails;
     private String content;
 
-    private MailRequest mailRequest;
 
 }

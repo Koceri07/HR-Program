@@ -15,12 +15,12 @@ public class RejectMailTamplateController {
     private final RejectMailTemplateService rejectMailTemplateService;
 
     @PostMapping
-    public void save(@RequestBody Long hrId, String content, CvRequest cvRequest){
-        rejectMailTemplateService.saveRejectMailTemplate(hrId,content);
+    public void save(@RequestBody RejectMailTemplateRequest rejectMailTemplateRequest){
+        rejectMailTemplateService.saveRejectMailTemplate(rejectMailTemplateRequest);
     }
 
-    @GetMapping
-    public RejectMailTemplateRequest getByHrId(Long hrId){
+    @GetMapping("/{hrId}")
+    public RejectMailTemplateRequest getByHrId(@PathVariable Long hrId){
         return rejectMailTemplateService.getRejectMailTemplateByHrId(hrId);
     }
 
